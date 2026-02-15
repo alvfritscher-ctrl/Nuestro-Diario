@@ -1,0 +1,3271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Diario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e8b4d4;
+            --secondary: #c89fd9;
+            --accent: #ffd4e5;
+            --dark: #4a3b5c;
+            --light: #fef7fb;
+            --text: #5a4a6a;
+            --shadow: rgba(200, 159, 217, 0.3);
+        }
+
+        body.dark-mode {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #a78bfa;
+            --dark: #e0e7ff;
+            --light: #0f172a;
+            --text: #e2e8f0;
+            --shadow: rgba(99, 102, 241, 0.3);
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+
+        body.dark-mode::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent);
+            background-size: 200% 200%, 200% 200%, 300% 300%, 250% 250%, 200% 200%, 280% 280%;
+            background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+            animation: stars 200s linear infinite;
+        }
+
+        @keyframes stars {
+            0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+            100% { background-position: 100% 100%, -100% -100%, 50% 50%, -50% -50%, 100% -100%, -100% 100%; }
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fef7fb 0%, #f3e5f5 50%, #fce4ec 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            animation: floatUp 20s infinite linear;
+        }
+
+        .particle.heart {
+            font-size: 20px;
+            color: rgba(255, 182, 193, 0.6);
+        }
+
+        body.dark-mode .particle.heart {
+            color: rgba(139, 92, 246, 0.6);
+        }
+
+        .particle.star {
+            font-size: 16px;
+            color: rgba(255, 215, 0, 0.5);
+        }
+
+        body.dark-mode .particle.star {
+            color: rgba(167, 139, 250, 0.7);
+        }
+
+        .particle.sparkle {
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+        }
+
+        .particle.petal {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 182, 193, 0.5);
+            border-radius: 50% 0 50% 0;
+            transform: rotate(45deg);
+        }
+
+        .particle.photo-float {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0.3;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .particle.photo-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(110vh) translateX(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(-20vh) translateX(var(--drift)) rotate(var(--rotate)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatDown {
+            0% { 
+                transform: translateY(-20vh) translateX(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(110vh) translateX(var(--drift)) rotate(var(--rotate)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatDiagonal {
+            0% { 
+                transform: translate(-20vw, 110vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(120vw, -20vh) rotate(var(--rotate)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #e8b4d4 0%, #c89fd9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        .welcome-content {
+            max-width: 600px;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: welcomeIn 1s ease;
+        }
+
+        @keyframes welcomeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .welcome-content h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            color: #4a3b5c;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .welcome-message {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a3b5c;
+            margin-bottom: 2rem;
+            white-space: pre-line;
+        }
+
+        .welcome-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .welcome-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px var(--shadow);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        .container.visible {
+            opacity: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            font-weight: 300;
+        }
+
+        /* Editor Toggle - Hidden by default */
+        .editor-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.3s ease;
+            display: none; /* Hidden by default */
+        }
+
+        .editor-toggle.visible {
+            display: block;
+            top: 6rem; /* Move down when visible to avoid overlap with theme toggle */
+        }
+
+        .editor-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--shadow);
+        }
+
+        /* Password Input Modal */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .password-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .password-box input {
+            width: 250px;
+            padding: 0.8rem;
+            border: 2px solid #e0d5e8;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .password-box input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .password-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .password-buttons button {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .password-submit {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .password-cancel {
+            background: #e0e0e0;
+            color: var(--text);
+        }
+
+        .password-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        /* Cursor trail effect */
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            animation: cursorFade 1.5s ease-out forwards;
+        }
+
+        .cursor-trail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes cursorFade {
+            0% { 
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            100% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(360deg);
+            }
+        }
+
+        /* Days together counter */
+        .days-counter {
+            position: fixed;
+            top: 5rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            z-index: 50;
+            text-align: center;
+            animation: fadeInDown 1s ease 0.5s both;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 200px;
+        }
+
+        .days-counter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(232, 180, 212, 0.4) 45deg,
+                rgba(200, 159, 217, 0.6) 90deg,
+                rgba(232, 180, 212, 0.4) 135deg,
+                transparent 180deg,
+                transparent 360deg
+            );
+            animation: rotateGlow 4s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .days-counter::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            z-index: -1;
+        }
+
+        .days-counter:hover {
+            transform: scale(1.05);
+            padding: 1.5rem 2rem;
+            max-width: 350px;
+            box-shadow: 0 15px 40px rgba(200, 159, 217, 0.5);
+        }
+
+        .days-counter-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .days-counter-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .days-counter-label {
+            font-size: 0.85rem;
+            color: var(--dark);
+            font-weight: 500;
+            margin-top: 0.2rem;
+            display: block;
+        }
+
+        .days-counter-phrase {
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-style: italic;
+            line-height: 1.5;
+            margin-top: 0.8rem;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .days-counter:hover .days-counter-phrase {
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        /* Month audio player */
+        .month-audio-player {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 180, 212, 0.4);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            margin: 0 auto 2.5rem;
+            width: fit-content;
+            box-shadow: 0 8px 30px rgba(200, 159, 217, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .month-audio-player {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .month-audio-player:hover {
+            box-shadow: 0 12px 40px rgba(200, 159, 217, 0.35);
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .month-audio-player:hover {
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.35);
+        }
+
+        .month-play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .month-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .month-play-btn.playing {
+            animation: pulse-play 1.5s ease infinite;
+        }
+
+        @keyframes pulse-play {
+            0%, 100% { box-shadow: 0 4px 15px var(--shadow); }
+            50% { box-shadow: 0 4px 25px var(--shadow), 0 0 0 8px rgba(200, 159, 217, 0.15); }
+        }
+
+        body.dark-mode .month-play-btn.playing {
+            animation: pulse-play-dark 1.5s ease infinite;
+        }
+
+        @keyframes pulse-play-dark {
+            0%, 100% { box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(99, 102, 241, 0.5), 0 0 0 8px rgba(99, 102, 241, 0.1); }
+        }
+
+        .month-song-label {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .month-song-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .month-song-bars.active {
+            opacity: 1;
+        }
+
+        .month-song-bars span {
+            width: 3px;
+            background: linear-gradient(to top, var(--primary), var(--secondary));
+            border-radius: 3px;
+            animation: none;
+        }
+
+        .month-song-bars.active span:nth-child(1) { animation: bar1 0.8s ease infinite; }
+        .month-song-bars.active span:nth-child(2) { animation: bar2 0.9s ease infinite 0.1s; }
+        .month-song-bars.active span:nth-child(3) { animation: bar3 0.7s ease infinite 0.2s; }
+        .month-song-bars.active span:nth-child(4) { animation: bar1 1s ease infinite 0.15s; }
+
+        @keyframes bar1 {
+            0%, 100% { height: 6px; } 50% { height: 18px; }
+        }
+        @keyframes bar2 {
+            0%, 100% { height: 14px; } 50% { height: 6px; }
+        }
+        @keyframes bar3 {
+            0%, 100% { height: 10px; } 50% { height: 20px; }
+        }
+
+        /* Timeline View */
+        .timeline-view {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+            animation: timelineSlide 0.8s ease both;
+        }
+
+        .timeline-item:nth-child(odd) {
+            padding-right: calc(50% + 3rem);
+        }
+
+        .timeline-item:nth-child(even) {
+            padding-left: calc(50% + 3rem);
+        }
+
+        @keyframes timelineSlide {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 1rem;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            border: 4px solid var(--light);
+            box-shadow: 0 0 0 4px rgba(200, 159, 217, 0.3);
+            z-index: 10;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: calc(50% - 10px);
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: calc(50% - 10px);
+        }
+
+        .timeline-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(200, 159, 217, 0.25);
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .timeline-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 40px rgba(200, 159, 217, 0.4);
+        }
+
+        .timeline-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-card .date {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-card .preview-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-card .preview-photos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .timeline-card .preview-photos img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* View toggle buttons */
+        .view-toggle {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .view-toggle-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid var(--primary);
+            color: var(--dark);
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+        }
+
+        .view-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        /* Sound Button */
+        .sound-btn {
+            position: fixed;
+            bottom: 3rem;
+            right: 8rem;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 35px rgba(255, 154, 158, 0.4);
+            z-index: 50;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .sound-btn.visible {
+            display: block;
+        }
+
+        .sound-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 45px rgba(255, 154, 158, 0.6);
+        }
+
+        .sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        .sound-btn.playing {
+            animation: soundPulse 0.5s ease;
+        }
+
+        @keyframes soundPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Backup buttons */
+        .backup-menu-btn {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .backup-menu-btn.visible {
+            opacity: 1;
+        }
+
+        .backup-menu-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        .backup-controls {
+            position: fixed;
+            top: 5rem;
+            left: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 140;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            padding: 1rem;
+            min-width: 200px;
+        }
+
+        .backup-controls.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .backup-btn {
+            background: transparent;
+            border: none;
+            color: var(--dark);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            text-align: left;
+        }
+
+        .backup-btn:hover {
+            background: var(--light);
+            color: var(--secondary);
+        }
+
+        body.dark-mode .backup-controls {
+            background: white;
+        }
+
+        body.dark-mode .backup-btn {
+            color: #1e293b;
+        }
+
+        body.dark-mode .backup-btn:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .backup-menu-divider {
+            height: 1px;
+            background: #e0d5e8;
+            margin: 0.5rem 0;
+        }
+
+        /* Import modal */
+        .import-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .import-modal.active {
+            display: flex;
+        }
+
+        .import-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .import-modal h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .import-modal p {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .import-file-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed var(--primary);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .import-file-input:hover {
+            border-color: var(--secondary);
+            background: var(--light);
+        }
+
+        .import-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .import-buttons button {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .import-confirm {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .import-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .import-cancel {
+            background: #e0e0e0;
+            color: var(--text);
+        }
+
+        .import-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(20deg);
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--dark);
+        }
+
+        /* Dark mode contrast fixes */
+        body.dark-mode .backup-menu-btn {
+            background: #8b5cf6 !important;
+            color: white !important;
+            border-color: #8b5cf6 !important;
+        }
+
+        body.dark-mode .backup-menu-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+        }
+
+        body.dark-mode .month-card h3 {
+            color: #1e293b;
+        }
+
+        body.dark-mode .days-counter-label,
+        body.dark-mode .days-counter-phrase {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .days-counter::after {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        body.dark-mode .view-toggle-btn {
+            color: #8b5cf6;
+        }
+
+        body.dark-mode .view-toggle-btn.active {
+            color: white;
+        }
+
+        body.dark-mode .timeline-card h3 {
+            color: #1e293b;
+        }
+
+        body.dark-mode .timeline-card .date {
+            color: #8b5cf6;
+        }
+
+        body.dark-mode .editor-panel {
+            background: #1e293b !important;
+        }
+
+        body.dark-mode .editor-panel h2,
+        body.dark-mode .editor-section label {
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-mode .editor-section input,
+        body.dark-mode .editor-section textarea,
+        body.dark-mode .editor-section select {
+            background: #334155 !important;
+            border-color: #475569 !important;
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-mode .editor-section input:focus,
+        body.dark-mode .editor-section textarea:focus,
+        body.dark-mode .editor-section select:focus {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important;
+        }
+
+        body.dark-mode .photo-editor-item {
+            background: #334155 !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark-mode .tab-button {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-mode .tab-button.active {
+            color: #c4b5fd !important;
+            border-bottom-color: #8b5cf6 !important;
+        }
+
+        body.dark-mode .pool-item {
+            background: #334155 !important;
+        }
+
+        body.dark-mode .editor-close-btn {
+            background: #475569 !important;
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-mode .editor-close-btn:hover {
+            background: #64748b !important;
+        }
+
+        body.dark-mode .password-box h3 {
+            color: #1e293b !important;
+        }
+
+        body.dark-mode .password-cancel {
+            color: #1e293b !important;
+        }
+
+        body.dark-mode .import-modal-content h3,
+        body.dark-mode .import-modal-content p {
+            color: #1e293b !important;
+        }
+
+        body.dark-mode .import-cancel {
+            color: #1e293b !important;
+        }
+
+        body.dark-mode #driveUrlInput {
+            background: #334155 !important;
+            border-color: #475569 !important;
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-mode #driveUrlInput:focus {
+            border-color: #8b5cf6 !important;
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .month-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(200, 159, 217, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease both;
+        }
+
+        .month-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .month-card:hover::before {
+            opacity: 0.3;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .month-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(200, 159, 217, 0.4);
+        }
+
+        .month-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .month-card .year {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        .month-card .preview {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Month Detail View */
+        .month-detail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--light) 0%, #f3e5f5 100%);
+            z-index: 500;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .month-detail.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .month-detail-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            animation: detailIn 0.8s ease both;
+        }
+
+        @keyframes detailIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-detail {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--dark);
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: all 0.3s ease;
+            z-index: 501;
+        }
+
+        .close-detail:hover {
+            transform: rotate(90deg);
+            background: white;
+        }
+
+        .month-detail h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .month-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--text);
+            margin-bottom: 3rem;
+            text-align: center;
+            white-space: pre-line;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 500px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+            z-index: 600;
+            overflow-y: auto;
+            transition: right 0.4s ease;
+            padding: 2rem;
+        }
+
+        .editor-panel.active {
+            right: 0;
+        }
+
+        .editor-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #e0e0e0;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .editor-close-btn:hover {
+            background: #d0d0d0;
+            transform: rotate(90deg);
+        }
+
+        .editor-panel h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .editor-section {
+            margin-bottom: 2rem;
+        }
+
+        .editor-section label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .editor-section input,
+        .editor-section textarea,
+        .editor-section select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0d5e8;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .editor-section input:focus,
+        .editor-section textarea:focus,
+        .editor-section select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(200, 159, 217, 0.1);
+        }
+
+        .editor-section textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .photo-editor {
+            margin-top: 1rem;
+        }
+
+        .photo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-editor-item {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px dashed #e0d5e8;
+        }
+
+        .photo-editor-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .add-photo-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .add-photo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #6eb57d, #4a9d5f);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(106, 181, 125, 0.4);
+        }
+
+        .delete-btn {
+            background: #e57373;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #d32f2f;
+        }
+
+        .new-month-btn {
+            position: fixed;
+            bottom: 3rem;
+            right: 3rem;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 35px var(--shadow);
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+
+        .new-month-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 45px var(--shadow);
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeInPhoto 1s ease both;
+        }
+
+        .slide-in {
+            animation: slideInPhoto 1s ease both;
+        }
+
+        .zoom-in {
+            animation: zoomInPhoto 1s ease both;
+        }
+
+        @keyframes fadeInPhoto {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInPhoto {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes zoomInPhoto {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .welcome-content h1 { font-size: 2rem; }
+            .editor-panel {
+                width: 100%;
+                right: -100%;
+            }
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+            .new-month-btn {
+                bottom: 2rem;
+                right: 2rem;
+            }
+        }
+
+        .welcome-editor-section {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-editor-section textarea {
+            height: 200px;
+        }
+
+        .pool-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .pool-item {
+            position: relative;
+            background: var(--light);
+            border: 2px solid #e0d5e8;
+            border-radius: 10px;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        .pool-item-content {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .pool-item-content img {
+            max-width: 100%;
+            max-height: 60px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .pool-item-size {
+            width: 100%;
+            margin-top: 0.3rem;
+        }
+
+        .pool-item-size-label {
+            font-size: 0.7rem;
+            color: var(--text);
+            margin-top: 0.2rem;
+        }
+
+        .pool-item-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e57373;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .pool-item-delete:hover {
+            background: #d32f2f;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e0d5e8;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .add-pool-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-pool-controls input {
+            flex: 1;
+        }
+
+        .add-pool-controls button {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-pool-controls button:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Days Together Counter -->
+    <div class="days-counter">
+        <div class="days-counter-content">
+            <span class="days-counter-number" id="daysNumber">0</span>
+            <span class="days-counter-label">días juntos</span>
+            <p class="days-counter-phrase" id="daysPhrase"></p>
+        </div>
+    </div>
+
+    <!-- Backup Menu Button -->
+    <button class="backup-menu-btn" id="backupMenuBtn" onclick="toggleBackupMenu()">☰</button>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <!-- Backup Controls Menu -->
+    <div class="backup-controls" id="backupControls">
+        <button class="backup-btn" onclick="exportBackup(); toggleBackupMenu();">
+            💾 Exportar Backup
+        </button>
+        <div class="backup-menu-divider"></div>
+        <button class="backup-btn" onclick="openImportModal(); toggleBackupMenu();">
+            📥 Importar Backup
+        </button>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+            <h1 id="welcomeTitleText"></h1>
+            <p class="welcome-message" id="welcomeMessageText"></p>
+            <button class="welcome-button" id="welcomeButtonText" onclick="closeWelcome()"></button>
+        </div>
+    </div>
+
+    <!-- Editor Toggle -->
+    <button class="editor-toggle" id="editorToggle" onclick="toggleEditorMode()">
+        <span id="editorModeText">Modo Editor</span>
+    </button>
+
+    <!-- Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-box">
+            <h3>Acceso Editor</h3>
+            <input type="password" id="passwordInput" placeholder="Contraseña" onkeypress="if(event.key==='Enter') checkPassword()">
+            <div class="password-buttons">
+                <button class="password-submit" onclick="checkPassword()">Entrar</button>
+                <button class="password-cancel" onclick="closePasswordModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <!-- Import Modal -->
+    <div class="import-modal" id="importModal">
+        <div class="import-modal-content">
+            <h3>Importar Data</h3>
+            <p>Pega el link <strong>RAW</strong> de GitHub Gist:</p>
+            <small style="display: block; margin-bottom: 1rem; color: var(--text); opacity: 0.8;">
+                💡 En el Gist, click en "Raw" y copia esa URL completa
+            </small>
+            <div class="editor-section">
+                <input type="text" id="driveUrlInput" placeholder="https://gist.githubusercontent.com/.../raw/..." style="width: 100%; padding: 0.8rem; border: 2px solid #e0d5e8; border-radius: 10px;">
+            </div>
+            <div class="import-buttons">
+                <button class="import-confirm" onclick="importBackupFromDrive()">Importar</button>
+                <button class="import-cancel" onclick="closeImportModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1 id="mainTitleContainer"><span id="mainTitlePart1">Dia</span><span id="secretR" style="cursor: default;">r</span><span id="mainTitlePart2">io</span></h1>
+            <p id="mainSubtitleText"></p>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle" id="viewToggle" style="display: none;">
+            <button class="view-toggle-btn active" onclick="switchView('grid')" title="Vista Cuadrícula">⊞</button>
+            <button class="view-toggle-btn" onclick="switchView('timeline')" title="Vista Línea de Tiempo">⋮</button>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="timeline-view" id="timelineView" style="display: none;"></div>
+    </div>
+
+    <!-- Month Detail View -->
+    <div class="month-detail" id="monthDetail">
+        <button class="close-detail" onclick="closeMonthDetail()">✕</button>
+        <div class="month-detail-content" id="monthDetailContent"></div>
+    </div>
+
+    <!-- Editor Panel -->
+    <div class="editor-panel" id="editorPanel">
+        <button class="editor-close-btn" onclick="closeEditorPanel()">×</button>
+        <h2>Editor</h2>
+        
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="switchTab('welcome')">Bienvenida</button>
+            <button class="tab-button" onclick="switchTab('texts')">Textos</button>
+            <button class="tab-button" onclick="switchTab('background')">Fondo Flotante</button>
+            <button class="tab-button" onclick="switchTab('sounds')">Sonidos</button>
+            <button class="tab-button" onclick="switchTab('month')">Mes</button>
+        </div>
+
+        <!-- Welcome Tab -->
+        <div class="tab-content active" id="welcomeTab">
+            <div class="welcome-editor-section">
+                <label>Mensaje de Bienvenida</label>
+                <textarea id="welcomeMessageEditor" placeholder="Escribe el mensaje que ella verá la primera vez..."></textarea>
+                <button class="save-btn" onclick="saveWelcomeMessage()">Guardar Mensaje de Bienvenida</button>
+            </div>
+        </div>
+
+        <!-- Texts Tab -->
+        <div class="tab-content" id="textsTab">
+            <div class="editor-section">
+                <label>Título de Bienvenida</label>
+                <input type="text" id="welcomeTitleInput" placeholder="">
+            </div>
+
+            <div class="editor-section">
+                <label>Título Principal</label>
+                <input type="text" id="mainTitleInput" placeholder="">
+            </div>
+
+            <div class="editor-section">
+                <label>Subtítulo Principal</label>
+                <input type="text" id="mainSubtitleInput" placeholder="">
+            </div>
+
+            <div class="editor-section">
+                <label>Frase del Contador (se muestra al pasar el mouse)</label>
+                <input type="text" id="daysPhraseInput" placeholder="">
+            </div>
+
+            <div class="editor-section">
+                <label>Mensaje Cuando No Hay Meses</label>
+                <input type="text" id="emptyMessageInput" placeholder="">
+            </div>
+
+            <div class="editor-section">
+                <label>Texto del Botón de Bienvenida</label>
+                <input type="text" id="welcomeButtonInput" placeholder="">
+            </div>
+
+            <button class="save-btn" onclick="saveCustomTexts()">Guardar Textos</button>
+        </div>
+
+        <!-- Background Pool Tab -->
+        <div class="tab-content" id="backgroundTab">
+            <div class="editor-section">
+                <label>Emojis / Stickers Flotantes</label>
+                <div class="add-pool-controls">
+                    <input type="text" id="newEmojiInput" placeholder="Pega emoji o texto (ej: ❤️, 🌸, etc)">
+                    <button onclick="addEmoji()">Agregar</button>
+                </div>
+                <div class="pool-items-grid" id="emojiGrid"></div>
+            </div>
+
+            <div class="editor-section" style="margin-top: 2rem;">
+                <label>Fotos / Stickers Personalizados</label>
+                <div class="add-pool-controls">
+                    <input type="text" id="newPhotoInput" placeholder="URL de la imagen">
+                    <button onclick="addCustomPhoto()">Agregar</button>
+                </div>
+                <div class="pool-items-grid" id="photoGrid"></div>
+            </div>
+
+            <div class="editor-section" style="margin-top: 2rem;">
+                <label>Pétalos: <span id="petalCount">15</span></label>
+                <input type="range" min="0" max="50" value="15" style="width: 100%;" oninput="updatePetalCount(this.value)">
+            </div>
+
+            <div class="editor-section">
+                <label>Destellos: <span id="sparkleCount">20</span></label>
+                <input type="range" min="0" max="50" value="20" style="width: 100%;" oninput="updateSparkleCount(this.value)">
+            </div>
+
+            <button class="save-btn" onclick="saveBackgroundPool()">Guardar y Actualizar Fondo</button>
+        </div>
+
+        <!-- Sounds Tab -->
+        <div class="tab-content" id="soundsTab">
+            <div class="editor-section">
+                <label>Pool de Sonidos</label>
+                <p style="font-size: 0.9rem; color: var(--text); opacity: 0.8; margin-bottom: 1rem;">
+                    Sube tus audios a un servicio como <a href="https://soundcloud.com" target="_blank">SoundCloud</a>, 
+                    <a href="https://vocaroo.com" target="_blank">Vocaroo</a>, o cualquier hosting de archivos y pega la URL directa del audio (debe terminar en .mp3, .wav, .ogg, etc).
+                </p>
+                <div class="add-pool-controls">
+                    <input type="text" id="newSoundInput" placeholder="URL del audio (.mp3, .wav, .ogg)">
+                    <button onclick="addSound()">Agregar</button>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <div id="soundsList"></div>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="saveSounds()">Guardar Sonidos</button>
+        </div>
+
+        <!-- Month Tab -->
+        <div class="tab-content" id="monthTab">
+            <div id="monthEditorContent">
+                <p style="color: var(--text); text-align: center; padding: 2rem;">
+                    Selecciona un mes para editarlo o crea uno nuevo con el botón +
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Month Button -->
+    <button class="new-month-btn" onclick="createNewMonth()" style="display: none;" id="newMonthBtn">+</button>
+
+    <!-- Sound Button -->
+    <button class="sound-btn" onclick="playRandomSound()" id="soundBtn">🔊</button>
+
+    <script>
+        // Storage helper - uses localStorage for real browser persistence
+        const storage = {
+            async get(key) {
+                try {
+                    const val = localStorage.getItem(key);
+                    return val ? JSON.parse(val) : null;
+                } catch (e) {
+                    return null;
+                }
+            },
+            async set(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (e) {
+                    console.error('Storage error:', e);
+                    return false;
+                }
+            }
+        };
+
+        // Global state
+        let months = [];
+        let editorMode = false;
+        let currentEditingMonth = null;
+        let welcomeMessage = "";
+        let relationshipStart = new Date('2021-01-24'); // January 24, 2021
+        let daysPhrase = "";
+        let isDarkMode = false;
+        let customTexts = {
+            welcomeTitle: "",
+            mainTitle: "Diario",
+            mainSubtitle: "",
+            emptyMessage: "",
+            welcomeButton: ""
+        };
+        let backgroundPool = {
+            emojis: [
+                { content: '❤️', size: 20 },
+                { content: '✨', size: 16 },
+                { content: '⭐', size: 16 },
+                { content: '💕', size: 18 },
+                { content: '🌸', size: 18 },
+                { content: '🦋', size: 18 },
+            ],
+            customPhotos: [],
+            petals: 15,
+            sparkles: 20
+        };
+        let soundPool = [];
+
+        // Month names in Spanish
+        const monthNames = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+
+        // Calculate days together
+        function calculateDaysTogether() {
+            const now = new Date();
+            const diffTime = Math.abs(now - relationshipStart);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        // Update days counter
+        function updateDaysCounter() {
+            const days = calculateDaysTogether();
+            document.getElementById('daysNumber').textContent = days.toLocaleString();
+        }
+
+        // Cursor trail effect
+        let lastTrailTime = 0;
+        function createCursorTrail(e) {
+            const now = Date.now();
+            if (now - lastTrailTime < 100) return; // Throttle to every 100ms
+            lastTrailTime = now;
+
+            // Get only emojis for cursor trail (no custom photos)
+            const emojiItems = backgroundPool.emojis.map(e => ({ type: 'emoji', content: e.content, size: e.size }));
+
+            if (emojiItems.length === 0) return;
+
+            const randomItem = emojiItems[Math.floor(Math.random() * emojiItems.length)];
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = e.pageX + 'px';
+            trail.style.top = e.pageY + 'px';
+            trail.style.width = randomItem.size + 'px';
+            trail.style.height = randomItem.size + 'px';
+
+            trail.textContent = randomItem.content;
+            trail.style.fontSize = randomItem.size + 'px';
+
+            document.body.appendChild(trail);
+
+            setTimeout(() => {
+                trail.remove();
+            }, 1500);
+        }
+
+        // Initialize
+        async function init() {
+            await loadData();
+            
+            // Apply theme
+            applyTheme();
+            
+            // Apply custom texts
+            applyCustomTexts();
+            
+            // Create particles AFTER loadData so backgroundPool and photos are ready
+            createParticles();
+            
+            // Update days counter
+            updateDaysCounter();
+            setInterval(updateDaysCounter, 60000); // Update every minute
+            
+            // Setup cursor trail
+            document.addEventListener('mousemove', createCursorTrail);
+            
+            // Show sound button if there are sounds
+            updateSoundButton();
+            
+            // Show backup controls
+            showBackupControls();
+            
+            // If no data loaded yet, go straight to import
+            if (!welcomeMessage) {
+                openImportModal();
+                document.getElementById('mainContainer').classList.add('visible');
+            } else {
+                // Show welcome screen normally
+                document.getElementById('welcomeMessageText').textContent = welcomeMessage;
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+                document.getElementById('mainContainer').classList.add('visible');
+            }
+            
+            renderCalendar();
+            
+            // Load welcome message in editor
+            document.getElementById('welcomeMessageEditor').value = welcomeMessage;
+            
+            // Load custom texts in editor
+            loadCustomTextsEditor();
+            
+            // Setup secret gesture - triple click on 'r' in Diario
+            setupSecretGesture();
+        }
+
+        // Apply custom texts to the page
+        function applyCustomTexts() {
+            document.getElementById('welcomeTitleText').textContent = customTexts.welcomeTitle;
+            document.getElementById('welcomeButtonText').textContent = customTexts.welcomeButton;
+            
+            // Update main title (preserving the secret 'r')
+            const title = customTexts.mainTitle;
+            const rIndex = title.toLowerCase().indexOf('r');
+            if (rIndex !== -1) {
+                document.getElementById('mainTitlePart1').textContent = title.substring(0, rIndex);
+                document.getElementById('secretR').textContent = title[rIndex]; // preserve original case
+                document.getElementById('mainTitlePart2').textContent = title.substring(rIndex + 1);
+            } else {
+                // If no 'r', put full title in part1, hide secretR visually but keep it clickable
+                document.getElementById('mainTitlePart1').textContent = title;
+                document.getElementById('secretR').textContent = '·'; // invisible but clickable dot
+                document.getElementById('mainTitlePart2').textContent = '';
+            }
+            
+            document.getElementById('mainSubtitleText').textContent = customTexts.mainSubtitle;
+            
+            // Update days phrase
+            document.getElementById('daysPhrase').textContent = daysPhrase;
+        }
+
+        // Load custom texts into editor
+        function loadCustomTextsEditor() {
+            document.getElementById('welcomeTitleInput').value = customTexts.welcomeTitle;
+            document.getElementById('mainTitleInput').value = customTexts.mainTitle;
+            document.getElementById('mainSubtitleInput').value = customTexts.mainSubtitle;
+            document.getElementById('emptyMessageInput').value = customTexts.emptyMessage;
+            document.getElementById('welcomeButtonInput').value = customTexts.welcomeButton;
+            document.getElementById('daysPhraseInput').value = daysPhrase;
+        }
+
+        // Secret gesture to access editor
+        function setupSecretGesture() {
+            const secretR = document.getElementById('secretR');
+            let clickCount = 0;
+            let clickTimer = null;
+            
+            secretR.addEventListener('click', function() {
+                clickCount++;
+                
+                if (clickCount === 1) {
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 500); // Reset after 500ms
+                }
+                
+                if (clickCount === 3) {
+                    clearTimeout(clickTimer);
+                    clickCount = 0;
+                    showPasswordModal();
+                }
+            });
+        }
+
+        // Show password modal
+        function showPasswordModal() {
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
+        }
+
+        // Close password modal
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+        }
+
+        // Check password
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === 'papaya') {
+                closePasswordModal();
+                // Show editor toggle button
+                document.getElementById('editorToggle').classList.add('visible');
+                // Automatically enter editor mode
+                if (!editorMode) {
+                    toggleEditorMode();
+                }
+            } else {
+                alert('❌ Contraseña incorrecta');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            particles.innerHTML = ''; // Clear existing
+            
+            // Add emoji particles from pool
+            backgroundPool.emojis.forEach((emoji, index) => {
+                for (let i = 0; i < 2; i++) { // 2 of each emoji
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.textContent = emoji.content;
+                    particle.style.fontSize = `${emoji.size}px`;
+                    particle.style.opacity = '0.6';
+                    
+                    // Random positioning
+                    particle.style.left = `${Math.random() * 100}%`;
+                    
+                    // Random animation
+                    const animations = ['floatUp', 'floatDown', 'floatDiagonal'];
+                    const animation = animations[Math.floor(Math.random() * animations.length)];
+                    particle.style.animation = `${animation} ${Math.random() * 15 + 15}s infinite linear`;
+                    particle.style.animationDelay = `${Math.random() * 20}s`;
+                    
+                    // Random drift and rotation
+                    particle.style.setProperty('--drift', `${Math.random() * 200 - 100}px`);
+                    particle.style.setProperty('--rotate', `${Math.random() * 720 - 360}deg`);
+                    
+                    particles.appendChild(particle);
+                }
+            });
+            
+            // Add custom photo particles from pool
+            backgroundPool.customPhotos.forEach((photo) => {
+                for (let i = 0; i < 2; i++) { // 2 of each photo
+                    const particle = document.createElement('div');
+                    particle.className = 'particle photo-float';
+                    particle.style.width = `${photo.size}px`;
+                    particle.style.height = `${photo.size}px`;
+                    
+                    const img = document.createElement('img');
+                    img.src = photo.url;
+                    particle.appendChild(img);
+                    
+                    // Random positioning
+                    particle.style.left = `${Math.random() * 100}%`;
+                    
+                    // Random animation
+                    const animations = ['floatUp', 'floatDown', 'floatDiagonal'];
+                    const animation = animations[Math.floor(Math.random() * animations.length)];
+                    particle.style.animation = `${animation} ${Math.random() * 20 + 25}s infinite linear`;
+                    particle.style.animationDelay = `${Math.random() * 30}s`;
+                    
+                    // Random drift and rotation
+                    particle.style.setProperty('--drift', `${Math.random() * 200 - 100}px`);
+                    particle.style.setProperty('--rotate', `${Math.random() * 180 - 90}deg`);
+                    
+                    particles.appendChild(particle);
+                }
+            });
+            
+            // Add petal particles
+            for (let i = 0; i < backgroundPool.petals; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle petal';
+                
+                // Random positioning
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const animations = ['floatUp', 'floatDown', 'floatDiagonal'];
+                const animation = animations[Math.floor(Math.random() * animations.length)];
+                particle.style.animation = `${animation} ${Math.random() * 15 + 15}s infinite linear`;
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // Random drift and rotation
+                particle.style.setProperty('--drift', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--rotate', `${Math.random() * 720 - 360}deg`);
+                
+                particles.appendChild(particle);
+            }
+            
+            // Add sparkle particles
+            for (let i = 0; i < backgroundPool.sparkles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle sparkle';
+                
+                // Random positioning
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const animations = ['floatUp', 'floatDown', 'floatDiagonal'];
+                const animation = animations[Math.floor(Math.random() * animations.length)];
+                particle.style.animation = `${animation} ${Math.random() * 15 + 15}s infinite linear`;
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // Random drift and rotation
+                particle.style.setProperty('--drift', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--rotate', `${Math.random() * 720 - 360}deg`);
+                
+                particles.appendChild(particle);
+            }
+            
+            // Add floating photos from diary
+            addFloatingPhotos();
+        }
+        
+        // Add floating photos from all months
+        function addFloatingPhotos() {
+            const particles = document.getElementById('particles');
+            const allPhotos = [];
+            
+            // Collect all photos from all months
+            months.forEach(month => {
+                if (month.photos && month.photos.length > 0) {
+                    month.photos.forEach(photo => {
+                        allPhotos.push(photo.url);
+                    });
+                }
+            });
+            
+            // Create floating photo particles (max 10 to avoid clutter)
+            const photoCount = Math.min(allPhotos.length, 10);
+            for (let i = 0; i < photoCount; i++) {
+                const photoIndex = Math.floor(Math.random() * allPhotos.length);
+                const particle = document.createElement('div');
+                particle.className = 'particle photo-float';
+                
+                const img = document.createElement('img');
+                img.src = allPhotos[photoIndex];
+                particle.appendChild(img);
+                
+                // Random positioning
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const animations = ['floatUp', 'floatDown', 'floatDiagonal'];
+                const animation = animations[Math.floor(Math.random() * animations.length)];
+                particle.style.animation = `${animation} ${Math.random() * 20 + 25}s infinite linear`;
+                particle.style.animationDelay = `${Math.random() * 30}s`;
+                
+                // Random drift and rotation
+                particle.style.setProperty('--drift', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--rotate', `${Math.random() * 180 - 90}deg`);
+                
+                particles.appendChild(particle);
+            }
+        }
+
+        // Load data from storage
+        async function loadData() {
+            const data = await storage.get('diaryData');
+            if (data) {
+                months = data.months || [];
+                welcomeMessage = data.welcomeMessage || "";
+                daysPhrase = data.daysPhrase || "";
+                isDarkMode = data.isDarkMode || false;
+                customTexts = data.customTexts || {
+                    welcomeTitle: "",
+                    mainTitle: "Diario",
+                    mainSubtitle: "",
+                    emptyMessage: "",
+                    welcomeButton: ""
+                };
+                backgroundPool = data.backgroundPool || {
+                    emojis: [
+                        { content: '❤️', size: 20 },
+                        { content: '✨', size: 16 },
+                        { content: '⭐', size: 16 },
+                        { content: '💕', size: 18 },
+                        { content: '🌸', size: 18 },
+                        { content: '🦋', size: 18 },
+                    ],
+                    customPhotos: [],
+                    petals: 15,
+                    sparkles: 20
+                };
+                soundPool = data.soundPool || [];
+            }
+        }
+
+        // Save data to storage
+        async function saveData() {
+            await storage.set('diaryData', {
+                months,
+                welcomeMessage,
+                daysPhrase,
+                isDarkMode,
+                customTexts,
+                backgroundPool,
+                soundPool
+            });
+        }
+
+        // Close welcome screen
+        function closeWelcome() {
+            const screen = document.getElementById('welcomeScreen');
+            screen.style.opacity = '0';
+            screen.style.pointerEvents = 'none';
+            setTimeout(() => {
+                screen.classList.add('hidden');
+            }, 1000); // match the 1s CSS transition
+            document.getElementById('mainContainer').classList.add('visible');
+            saveData();
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const toggle = document.getElementById('viewToggle');
+            grid.innerHTML = '';
+            
+            if (months.length === 0) {
+                toggle.style.display = 'none';
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                        <p style="font-size: 1.5rem; color: var(--text); opacity: 0.6;">
+                            ${editorMode ? 'Crea tu primer mes con el botón +' : customTexts.emptyMessage}
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show view toggle if there are months
+            toggle.style.display = 'flex';
+
+            months.forEach((month, index) => {
+                const card = document.createElement('div');
+                card.className = 'month-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                const preview = month.text ? month.text.substring(0, 100) + '...' : '';
+                
+                card.innerHTML = `
+                    <h3>${monthNames[month.month - 1]}</h3>
+                    <p class="year">${month.year}</p>
+                    ${preview ? `<p class="preview">${preview}</p>` : ''}
+                `;
+                
+                card.onclick = () => {
+                    if (editorMode) {
+                        editMonth(index);
+                    } else {
+                        showMonthDetail(index);
+                    }
+                };
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Render timeline view
+        function renderTimeline() {
+            const timeline = document.getElementById('timelineView');
+            timeline.innerHTML = '';
+
+            if (months.length === 0) {
+                timeline.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem;">
+                        <p style="font-size: 1.5rem; color: var(--text); opacity: 0.6;">
+                            ${customTexts.emptyMessage}
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Add timeline line
+            const line = document.createElement('div');
+            line.className = 'timeline-line';
+            timeline.appendChild(line);
+
+            // Sort months chronologically
+            const sortedMonths = [...months].map((m, i) => ({ ...m, originalIndex: i }))
+                .sort((a, b) => {
+                    if (a.year !== b.year) return a.year - b.year;
+                    return a.month - b.month;
+                });
+
+            sortedMonths.forEach((month, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.style.animationDelay = `${index * 0.15}s`;
+
+                const dot = document.createElement('div');
+                dot.className = 'timeline-dot';
+
+                const card = document.createElement('div');
+                card.className = 'timeline-card';
+
+                const preview = month.text ? month.text.substring(0, 150) + '...' : '';
+                
+                let photosHTML = '';
+                if (month.photos && month.photos.length > 0) {
+                    photosHTML = '<div class="preview-photos">';
+                    const maxPhotos = Math.min(month.photos.length, 3);
+                    for (let i = 0; i < maxPhotos; i++) {
+                        photosHTML += `<img src="${month.photos[i].url}" alt="Foto ${i + 1}">`;
+                    }
+                    photosHTML += '</div>';
+                }
+
+                card.innerHTML = `
+                    <h3>${monthNames[month.month - 1]} ${month.year}</h3>
+                    ${preview ? `<p class="preview-text">${preview}</p>` : ''}
+                    ${photosHTML}
+                `;
+
+                card.onclick = () => {
+                    if (editorMode) {
+                        editMonth(month.originalIndex);
+                    } else {
+                        showMonthDetail(month.originalIndex);
+                    }
+                };
+
+                item.appendChild(dot);
+                item.appendChild(card);
+                timeline.appendChild(item);
+            });
+        }
+
+        // Switch between views
+        let currentView = 'grid';
+        function switchView(view) {
+            currentView = view;
+            
+            // Update buttons
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide views
+            if (view === 'grid') {
+                document.getElementById('calendarGrid').style.display = 'grid';
+                document.getElementById('timelineView').style.display = 'none';
+            } else {
+                document.getElementById('calendarGrid').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'block';
+                renderTimeline();
+            }
+        }
+
+        // Month audio state
+        let monthAudio = null;
+        let monthAudioPlaying = false;
+
+        function toggleMonthSong(url) {
+            const btn = document.getElementById('monthPlayBtn');
+            const bars = document.getElementById('monthSongBars');
+
+            if (!monthAudio) {
+                monthAudio = new Audio(url);
+                monthAudio.onended = () => {
+                    monthAudioPlaying = false;
+                    btn.textContent = '♪';
+                    btn.classList.remove('playing');
+                    bars.classList.remove('active');
+                };
+            }
+
+            if (monthAudioPlaying) {
+                monthAudio.pause();
+                monthAudioPlaying = false;
+                btn.textContent = '♪';
+                btn.classList.remove('playing');
+                bars.classList.remove('active');
+            } else {
+                monthAudio.play();
+                monthAudioPlaying = true;
+                btn.textContent = '■';
+                btn.classList.add('playing');
+                bars.classList.add('active');
+            }
+        }
+
+        function stopMonthAudio() {
+            if (monthAudio) {
+                monthAudio.pause();
+                monthAudio.currentTime = 0;
+                monthAudio = null;
+                monthAudioPlaying = false;
+            }
+        }
+
+        // Show month detail
+        function showMonthDetail(index) {
+            const month = months[index];
+            const content = document.getElementById('monthDetailContent');
+
+            // Stop any previous month audio
+            stopMonthAudio();
+
+            let audioPlayerHTML = '';
+            if (month.songUrl) {
+                audioPlayerHTML = `
+                    <div class="month-audio-player">
+                        <button class="month-play-btn" id="monthPlayBtn" onclick="toggleMonthSong('${month.songUrl}')">♪</button>
+                        <span class="month-song-label">Canción del mes 🎵</span>
+                        <div class="month-song-bars" id="monthSongBars">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let photosHTML = '';
+            if (month.photos && month.photos.length > 0) {
+                photosHTML = '<div class="photo-gallery">';
+                month.photos.forEach((photo, i) => {
+                    const animClass = photo.animation || 'fade-in';
+                    photosHTML += `
+                        <div class="photo-item ${animClass}" style="animation-delay: ${i * 0.2}s;">
+                            <img src="${photo.url}" alt="Foto ${i + 1}">
+                        </div>
+                    `;
+                });
+                photosHTML += '</div>';
+            }
+
+            const emptyMsg = (!month.text && (!month.photos || month.photos.length === 0))
+                ? `<p style="opacity:0.5; font-style:italic; margin-top:2rem;">Aún no hay contenido en este mes 🌸</p>`
+                : '';
+
+            content.innerHTML = `
+                <h2>${monthNames[month.month - 1]} ${month.year}</h2>
+                ${audioPlayerHTML}
+                <p class="month-text">${month.text || ''}</p>
+                ${emptyMsg}
+                ${photosHTML}
+            `;
+
+            document.getElementById('monthDetail').classList.add('active');
+        }
+
+        // Close month detail
+        function closeMonthDetail() {
+            stopMonthAudio();
+            document.getElementById('monthDetail').classList.remove('active');
+        }
+
+        // Toggle editor mode
+        function toggleEditorMode() {
+            editorMode = !editorMode;
+            const btn = document.getElementById('editorModeText');
+            const newMonthBtn = document.getElementById('newMonthBtn');
+            const panel = document.getElementById('editorPanel');
+            
+            if (editorMode) {
+                btn.textContent = 'Modo Vista';
+                newMonthBtn.style.display = 'block';
+                panel.classList.add('active');
+            } else {
+                btn.textContent = 'Modo Editor';
+                newMonthBtn.style.display = 'none';
+                panel.classList.remove('active');
+                currentEditingMonth = null;
+            }
+            
+            renderCalendar();
+        }
+
+        // Close editor panel
+        function closeEditorPanel() {
+            const panel = document.getElementById('editorPanel');
+            panel.classList.remove('active');
+        }
+
+        // Create new month
+        function createNewMonth() {
+            const now = new Date();
+            const newMonth = {
+                month: now.getMonth() + 1,
+                year: now.getFullYear(),
+                text: '',
+                photos: []
+            };
+            
+            months.push(newMonth);
+            saveData();
+            renderCalendar();
+            editMonth(months.length - 1);
+        }
+
+        // Edit month
+        function editMonth(index) {
+            currentEditingMonth = index;
+            const month = months[index];
+            const content = document.getElementById('monthEditorContent');
+            
+            let photosHTML = '';
+            if (month.photos && month.photos.length > 0) {
+                month.photos.forEach((photo, i) => {
+                    photosHTML += `
+                        <div class="photo-editor-item">
+                            <img src="${photo.url}" alt="Foto ${i + 1}">
+                            <select onchange="updatePhotoAnimation(${i}, this.value)">
+                                <option value="fade-in" ${photo.animation === 'fade-in' ? 'selected' : ''}>Aparecer (Fade In)</option>
+                                <option value="slide-in" ${photo.animation === 'slide-in' ? 'selected' : ''}>Deslizar (Slide In)</option>
+                                <option value="zoom-in" ${photo.animation === 'zoom-in' ? 'selected' : ''}>Zoom In</option>
+                            </select>
+                            <button class="delete-btn" onclick="deletePhoto(${i})">Eliminar Foto</button>
+                        </div>
+                    `;
+                });
+            }
+            
+            content.innerHTML = `
+                <div class="editor-section">
+                    <label>Mes</label>
+                    <select id="monthSelect" onchange="updateMonth()">
+                        ${monthNames.map((name, i) => 
+                            `<option value="${i + 1}" ${month.month === i + 1 ? 'selected' : ''}>${name}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+                
+                <div class="editor-section">
+                    <label>Año</label>
+                    <input type="number" id="yearInput" value="${month.year}" onchange="updateMonth()">
+                </div>
+                
+                <div class="editor-section">
+                    <label>Tu Mensaje</label>
+                    <textarea id="textInput" onchange="updateMonth()">${month.text || ''}</textarea>
+                </div>
+                
+                <div class="editor-section">
+                    <label>Canción del Mes (URL de audio, ej: catbox.moe)</label>
+                    <input type="text" id="songInput" value="${month.songUrl || ''}" onchange="updateMonth()" placeholder="https://files.catbox.moe/....mp3">
+                    <small style="color: var(--text); opacity: 0.7; display: block; margin-top: 0.5rem;">
+                        Sube el audio a catbox.moe y pega el link aquí. Aparecerá un botón de play al abrir el mes.
+                    </small>
+                </div>
+                
+                <div class="editor-section">
+                    <label>Fotos</label>
+                    <div class="photo-list">
+                        ${photosHTML}
+                    </div>
+                    <button class="add-photo-btn" onclick="addPhoto()">+ Agregar Foto</button>
+                </div>
+                
+                <button class="save-btn" onclick="saveMonth()">Guardar Mes</button>
+                <button class="delete-btn" style="width: 100%; margin-top: 1rem; padding: 1rem;" onclick="deleteMonth()">Eliminar Este Mes</button>
+            `;
+        }
+
+        // Update month
+        function updateMonth() {
+            if (currentEditingMonth === null) return;
+            
+            const month = months[currentEditingMonth];
+            month.month = parseInt(document.getElementById('monthSelect').value);
+            month.year = parseInt(document.getElementById('yearInput').value);
+            month.text = document.getElementById('textInput').value;
+            month.songUrl = document.getElementById('songInput').value;
+        }
+
+        // Add photo
+        function addPhoto() {
+            const url = prompt('Pega la URL de la imagen:');
+            if (!url) return;
+            
+            const month = months[currentEditingMonth];
+            if (!month.photos) month.photos = [];
+            
+            month.photos.push({
+                url: url,
+                animation: 'fade-in'
+            });
+            
+            editMonth(currentEditingMonth);
+        }
+
+        // Update photo animation
+        function updatePhotoAnimation(photoIndex, animation) {
+            const month = months[currentEditingMonth];
+            month.photos[photoIndex].animation = animation;
+        }
+
+        // Delete photo
+        function deletePhoto(photoIndex) {
+            if (!confirm('¿Eliminar esta foto?')) return;
+            
+            const month = months[currentEditingMonth];
+            month.photos.splice(photoIndex, 1);
+            editMonth(currentEditingMonth);
+        }
+
+        // Save month
+        async function saveMonth() {
+            updateMonth();
+            await saveData();
+            alert('✓ Mes guardado exitosamente');
+            renderCalendar();
+            createParticles(); // Refresh background with new photos
+        }
+
+        // Delete month
+        async function deleteMonth() {
+            if (!confirm('¿Estás seguro de eliminar este mes?')) return;
+            
+            months.splice(currentEditingMonth, 1);
+            currentEditingMonth = null;
+            await saveData();
+            renderCalendar();
+            createParticles(); // Refresh background
+            
+            document.getElementById('monthEditorContent').innerHTML = `
+                <p style="color: var(--text); text-align: center; padding: 2rem;">
+                    Selecciona un mes para editarlo o crea uno nuevo con el botón +
+                </p>
+            `;
+        }
+
+        // Save welcome message
+        async function saveWelcomeMessage() {
+            welcomeMessage = document.getElementById('welcomeMessageEditor').value;
+            await saveData();
+            alert('✓ Mensaje de bienvenida guardado');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Render background tab if switching to it
+            if (tabName === 'background') {
+                renderBackgroundEditor();
+            }
+            
+            // Load texts if switching to texts tab
+            if (tabName === 'texts') {
+                loadCustomTextsEditor();
+            }
+            
+            // Render sounds if switching to sounds tab
+            if (tabName === 'sounds') {
+                renderSoundsList();
+            }
+        }
+
+        // Render background pool editor
+        function renderBackgroundEditor() {
+            // Render emojis
+            const emojiGrid = document.getElementById('emojiGrid');
+            emojiGrid.innerHTML = '';
+            backgroundPool.emojis.forEach((emoji, index) => {
+                const item = document.createElement('div');
+                item.className = 'pool-item';
+                item.innerHTML = `
+                    <button class="pool-item-delete" onclick="deleteEmoji(${index})">×</button>
+                    <div class="pool-item-content" style="font-size: ${emoji.size}px">${emoji.content}</div>
+                    <input type="range" min="10" max="50" value="${emoji.size}" 
+                           class="pool-item-size" 
+                           oninput="updateEmojiSize(${index}, this.value)">
+                    <div class="pool-item-size-label">${emoji.size}px</div>
+                `;
+                emojiGrid.appendChild(item);
+            });
+
+            // Render custom photos
+            const photoGrid = document.getElementById('photoGrid');
+            photoGrid.innerHTML = '';
+            backgroundPool.customPhotos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'pool-item';
+                item.innerHTML = `
+                    <button class="pool-item-delete" onclick="deleteCustomPhoto(${index})">×</button>
+                    <div class="pool-item-content">
+                        <img src="${photo.url}" alt="Custom">
+                    </div>
+                    <input type="range" min="40" max="150" value="${photo.size}" 
+                           class="pool-item-size" 
+                           oninput="updatePhotoSize(${index}, this.value)">
+                    <div class="pool-item-size-label">${photo.size}px</div>
+                `;
+                photoGrid.appendChild(item);
+            });
+
+            // Update counters
+            document.getElementById('petalCount').textContent = backgroundPool.petals;
+            document.getElementById('sparkleCount').textContent = backgroundPool.sparkles;
+        }
+
+        // Add emoji
+        function addEmoji() {
+            const input = document.getElementById('newEmojiInput');
+            const content = input.value.trim();
+            if (!content) return;
+            
+            backgroundPool.emojis.push({
+                content: content,
+                size: 20
+            });
+            
+            input.value = '';
+            renderBackgroundEditor();
+        }
+
+        // Delete emoji
+        function deleteEmoji(index) {
+            backgroundPool.emojis.splice(index, 1);
+            renderBackgroundEditor();
+        }
+
+        // Update emoji size
+        function updateEmojiSize(index, size) {
+            backgroundPool.emojis[index].size = parseInt(size);
+            renderBackgroundEditor();
+        }
+
+        // Add custom photo
+        function addCustomPhoto() {
+            const input = document.getElementById('newPhotoInput');
+            const url = input.value.trim();
+            if (!url) return;
+            
+            backgroundPool.customPhotos.push({
+                url: url,
+                size: 80
+            });
+            
+            input.value = '';
+            renderBackgroundEditor();
+        }
+
+        // Delete custom photo
+        function deleteCustomPhoto(index) {
+            backgroundPool.customPhotos.splice(index, 1);
+            renderBackgroundEditor();
+        }
+
+        // Update photo size
+        function updatePhotoSize(index, size) {
+            backgroundPool.customPhotos[index].size = parseInt(size);
+            renderBackgroundEditor();
+        }
+
+        // Update petal count
+        function updatePetalCount(count) {
+            backgroundPool.petals = parseInt(count);
+            document.getElementById('petalCount').textContent = count;
+        }
+
+        // Update sparkle count
+        function updateSparkleCount(count) {
+            backgroundPool.sparkles = parseInt(count);
+            document.getElementById('sparkleCount').textContent = count;
+        }
+
+        // Save background pool
+        async function saveBackgroundPool() {
+            await saveData();
+            createParticles();
+            alert('✓ Fondo actualizado exitosamente');
+        }
+
+        // Save custom texts
+        async function saveCustomTexts() {
+            customTexts.welcomeTitle = document.getElementById('welcomeTitleInput').value;
+            customTexts.mainTitle = document.getElementById('mainTitleInput').value;
+            customTexts.mainSubtitle = document.getElementById('mainSubtitleInput').value;
+            customTexts.emptyMessage = document.getElementById('emptyMessageInput').value;
+            customTexts.welcomeButton = document.getElementById('welcomeButtonInput').value;
+            daysPhrase = document.getElementById('daysPhraseInput').value;
+            
+            await saveData();
+            applyCustomTexts();
+            renderCalendar(); // Re-render to apply empty message
+            alert('✓ Textos guardados exitosamente');
+        }
+
+        // Sound pool functions
+
+        // Sound pool functions
+        let currentAudio = null;
+
+        function playRandomSound() {
+            if (soundPool.length === 0) return;
+            
+            const randomSound = soundPool[Math.floor(Math.random() * soundPool.length)];
+            
+            // Stop current audio if playing
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            
+            // Play new audio
+            currentAudio = new Audio(randomSound.url);
+            currentAudio.play();
+            
+            // Add pulse animation
+            const btn = document.getElementById('soundBtn');
+            btn.classList.add('playing');
+            setTimeout(() => btn.classList.remove('playing'), 500);
+        }
+
+        function renderSoundsList() {
+            const list = document.getElementById('soundsList');
+            list.innerHTML = '';
+            
+            if (soundPool.length === 0) {
+                list.innerHTML = '<p style="color: var(--text); opacity: 0.6; text-align: center; padding: 2rem;">No hay sonidos agregados</p>';
+                return;
+            }
+            
+            soundPool.forEach((sound, index) => {
+                const item = document.createElement('div');
+                item.style.background = 'var(--light)';
+                item.style.padding = '1rem';
+                item.style.borderRadius = '10px';
+                item.style.marginBottom = '0.5rem';
+                item.style.display = 'flex';
+                item.style.alignItems = 'center';
+                item.style.gap = '0.5rem';
+                
+                const label = document.createElement('span');
+                label.textContent = sound.name || `Sonido ${index + 1}`;
+                label.style.flex = '1';
+                label.style.fontSize = '0.9rem';
+                
+                const playBtn = document.createElement('button');
+                playBtn.textContent = '▶️';
+                playBtn.style.background = 'var(--primary)';
+                playBtn.style.color = 'white';
+                playBtn.style.border = 'none';
+                playBtn.style.padding = '0.5rem 0.8rem';
+                playBtn.style.borderRadius = '8px';
+                playBtn.style.cursor = 'pointer';
+                playBtn.onclick = () => {
+                    const audio = new Audio(sound.url);
+                    audio.play();
+                };
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '×';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.style.marginTop = '0';
+                deleteBtn.onclick = () => deleteSound(index);
+                
+                item.appendChild(label);
+                item.appendChild(playBtn);
+                item.appendChild(deleteBtn);
+                list.appendChild(item);
+            });
+        }
+
+        function addSound() {
+            const input = document.getElementById('newSoundInput');
+            const url = input.value.trim();
+            if (!url) return;
+            
+            const name = prompt('Nombre para este sonido (opcional):') || `Sonido ${soundPool.length + 1}`;
+            
+            soundPool.push({
+                url: url,
+                name: name
+            });
+            
+            input.value = '';
+            renderSoundsList();
+            updateSoundButton();
+        }
+
+        function deleteSound(index) {
+            soundPool.splice(index, 1);
+            renderSoundsList();
+            updateSoundButton();
+        }
+
+        async function saveSounds() {
+            await saveData();
+            updateSoundButton();
+            alert('✓ Sonidos guardados exitosamente');
+        }
+
+        function updateSoundButton() {
+            const btn = document.getElementById('soundBtn');
+            if (soundPool.length > 0) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        }
+
+        // Backup functions
+        let selectedBackupFile = null;
+
+        function exportBackup() {
+            const backupData = {
+                months,
+                welcomeMessage,
+                daysPhrase,
+                isDarkMode,
+                customTexts,
+                backgroundPool,
+                soundPool,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'diario-backup.json';
+            link.click();
+            URL.revokeObjectURL(url);
+
+            alert('✓ Backup exportado exitosamente\n\nAhora sube este archivo a Google Drive y comparte el link.');
+        }
+
+        function openImportModal() {
+            document.getElementById('importModal').classList.add('active');
+            document.getElementById('driveUrlInput').value = '';
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.remove('active');
+        }
+
+        function showFirstTimeImport() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            openImportModal();
+        }
+
+        function extractDriveFileId(url) {
+            // Extract file ID from various Google Drive URL formats
+            const patterns = [
+                /\/file\/d\/([a-zA-Z0-9_-]+)/,
+                /id=([a-zA-Z0-9_-]+)/,
+                /^([a-zA-Z0-9_-]+)$/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        async function importBackupFromDrive() {
+            const driveUrl = document.getElementById('driveUrlInput').value.trim();
+            
+            if (!driveUrl) {
+                alert('❌ Por favor pega el link');
+                return;
+            }
+
+            try {
+                let downloadUrl;
+                
+                // Check if it's a GitHub Gist URL
+                if (driveUrl.includes('gist.githubusercontent.com')) {
+                    // It's already a raw Gist URL, use it directly
+                    downloadUrl = driveUrl;
+                } else if (driveUrl.includes('gist.github.com')) {
+                    // Convert regular Gist URL to raw
+                    alert('❌ Necesitas el link RAW del Gist.\n\nEn el Gist, click en "Raw" y copia esa URL.');
+                    return;
+                } else {
+                    // Assume it's Google Drive (won't work but try anyway)
+                    const fileId = extractDriveFileId(driveUrl);
+                    if (!fileId) {
+                        alert('❌ Link inválido.\n\nUsa un link RAW de GitHub Gist:\nhttps://gist.githubusercontent.com/.../raw/...');
+                        return;
+                    }
+                    downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                }
+                
+                const response = await fetch(downloadUrl);
+                
+                if (!response.ok) {
+                    throw new Error('No se pudo descargar el archivo');
+                }
+                
+                // Use ArrayBuffer + TextDecoder to ensure proper UTF-8 decoding
+                const buffer = await response.arrayBuffer();
+                const fileContent = new TextDecoder('utf-8').decode(buffer);
+                const backupData = JSON.parse(fileContent);
+
+                // Validate backup data
+                if (!backupData.months || !backupData.version) {
+                    alert('❌ Archivo de backup inválido');
+                    return;
+                }
+
+                // Confirm before importing
+                const confirm = window.confirm('⚠️ Esto reemplazará toda la información actual.\n\n¿Estás seguro de continuar?');
+                if (!confirm) return;
+
+                // Import data
+                months = backupData.months || [];
+                welcomeMessage = backupData.welcomeMessage || "";
+                daysPhrase = backupData.daysPhrase || "";
+                isDarkMode = backupData.isDarkMode || false;
+                customTexts = backupData.customTexts || customTexts;
+                backgroundPool = backupData.backgroundPool || backgroundPool;
+                soundPool = backupData.soundPool || [];
+
+                // Save to storage
+                await saveData();
+
+                // Refresh UI
+                applyTheme();
+                applyCustomTexts();
+                renderCalendar();
+                createParticles();
+                updateSoundButton();
+
+                closeImportModal();
+                alert('✓ Backup importado exitosamente\n\nToda la información ha sido restaurada.');
+
+                // Show main container after import (no reload needed)
+                document.getElementById('welcomeScreen').classList.add('hidden');
+                document.getElementById('mainContainer').classList.add('visible');
+            } catch (err) {
+                console.error('Error importing backup:', err);
+                alert('❌ Error al importar.\n\nPara GitHub Gist:\n1. Abre el Gist\n2. Click en "Raw"\n3. Copia ESA URL completa\n\nError: ' + err.message);
+            }
+        }
+
+        // Show backup controls after initialization
+        function showBackupControls() {
+            document.getElementById('backupMenuBtn').classList.add('visible');
+        }
+
+        // Toggle backup menu
+        function toggleBackupMenu() {
+            const menu = document.getElementById('backupControls');
+            menu.classList.toggle('active');
+        }
+
+        // Theme toggle functions
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            applyTheme();
+            saveData();
+        }
+
+        function applyTheme() {
+            const icon = document.getElementById('themeIcon');
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                icon.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-mode');
+                icon.textContent = '🌙';
+            }
+        }
+
+        // Close backup menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('backupControls');
+            const btn = document.getElementById('backupMenuBtn');
+            
+            if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
