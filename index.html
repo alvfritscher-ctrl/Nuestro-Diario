@@ -2004,6 +2004,10 @@
             sparkles: 20
         };
         let soundPool = [];
+        
+        // GIST URL - Pon aquí el link RAW de tu Gist
+        // Ejemplo: https://gist.githubusercontent.com/username/gist-id/raw/backup.json
+        const GIST_BACKUP_URL = "https://gist.githubusercontent.com/alvfritscher-ctrl/7b30618c94780d3ef62abb10d535dff5/raw/backup.json";
 
         // Month names in Spanish
         const monthNames = [
@@ -2057,6 +2061,32 @@
 
         // Initialize
         async function init() {
+            // Auto-load from Gist if URL is configured
+            if (GIST_BACKUP_URL) {
+                try {
+                    console.log('Loading from Gist:', GIST_BACKUP_URL);
+                    const response = await fetch(GIST_BACKUP_URL);
+                    if (response.ok) {
+                        const backupData = await response.json();
+                        if (backupData.months && backupData.version) {
+                            // Load data from Gist
+                            months = backupData.months || [];
+                            welcomeMessage = backupData.welcomeMessage || "";
+                            daysPhrase = backupData.daysPhrase || "";
+                            isDarkMode = backupData.isDarkMode || false;
+                            customTexts = backupData.customTexts || customTexts;
+                            backgroundPool = backupData.backgroundPool || backgroundPool;
+                            soundPool = backupData.soundPool || [];
+                            console.log('Gist loaded successfully');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error loading from Gist:', err);
+                    // Continue with local storage if Gist fails
+                }
+            }
+            
+            // Also load from localStorage (in case there's local data or Gist failed)
             await loadData();
             
             // Apply theme
